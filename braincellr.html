@@ -442,34 +442,33 @@ pre code {
 </div>
 
 
-<div id="braincellr-provides-researchers-with-a-powerful-and-user-friendly-package-for-efficient-cell-type-nomination-of-single-cell-transcriptomic-data." class="section level4">
-<h4><code>BrainCellR</code> provides researchers with a powerful and user-friendly package for efficient cell type nomination of single-cell transcriptomic data.</h4>
+<div id="braincellr-provides-researchers-with-a-powerful-and-user-friendly-package-for-efficient-cell-type-classfication-and-nomination-of-single-cell-transcriptomic-data-in-the-brain." class="section level4">
+<h4><code>BrainCellR</code> provides researchers with a powerful and user-friendly package for efficient cell type classfication and nomination of single-cell transcriptomic data in the brain.</h4>
 <p><a id="contents"></a></p>
-<p><br> <code>BrainCellR</code> consists of the following steps:</p>
+<p><br> <code>BrainCellR</code> process comprises the following steps:</p>
 <ul>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#input">Input data preparation</a><br>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#input">Preparation of input data</a><br>
 </li>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#cluster">Cluster single-cell data at a fine scale</a><br>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#cluster">Fine-scale clustering of single-cell data</a><br>
 </li>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#class">Supply the clusters to a supervised cell type classifier which can output cell major classes and subclasses</a></li>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#DE">Find differentially expressed genes and select marker genes from the identified differentially expressed genes</a>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#class">Provision of clusters to a supervised cell type classifier capable of outputting major cell classes and subclasses</a></li>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#DE">Identification of differentially expressed genes and select marker genes from the identified differentially expressed genes</a>
 <ul>
 <li>Find differentially expressed genes<br>
 </li>
-<li>Select genes that have high fold change value and expressed in most of the cells belonging to the cell type</li>
-<li>Rank the genes by binary score<br>
-</li>
+<li>Selection of genes that exhibit a high fold change value and are expressed in the majority of cells within a given cell type</li>
+<li>Ranking of genes based on specific score</li>
 </ul></li>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#anno">Get the final cell type annotation</a><br>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#anno">Acquisition of the final cell type annotation</a><br>
 </li>
-<li><a href="file:///G:/PFC/package_example/Tutorial.html#extra">Find markers that can not be identified by ROC method</a><br>
+<li><a href="file:///G:/PFC/package_example/Tutorial.html#extra">Identification of markers that cannot be detected using the ROC method</a><br>
 <br> <br></li>
 </ul>
-<p>In this tutorial, we use mouse M1 cortex from Bakken TE et al.&nbsp;Comparative cellular analysis of motor cortex in human, marmoset and mouse. Nature. 2021. <br> For making the example run faster, we only extracted the first 1000 cells.</p>
+<p>In this tutorial, we will be using data from the mouse M1 cortex, as presented in Bakken TE et al.’s 2021 study, ‘Comparative Cellular Analysis of Motor Cortex in Human, Marmoset and Mouse’, published in Nature. <br> To expedite the tutorial, we have extracted only the first 1000 cells.</p>
 </div>
 <div id="input" class="section level2">
-<h2>Input data preparation</h2>
-<p>Input data should be single cell transcriptome data with genes in row and cell in column, the clustering method remmonded that the input data should be log transformed and sparse matrix can speed up the time.</p>
+<h2>Preparation of input data</h2>
+<p>The input data should consist of single-cell transcriptome data, arranged with genes in rows and cells in columns. The clustering method recommends that the input data be log-transformed. Using a sparse matrix can help speed up the process.</p>
 <pre class="r"><code class="hljs"><span class="hljs-keyword">library</span>(scrattch.hicat)
 <span class="hljs-keyword">library</span>(BrainCellR)</code></pre>
 <pre><code class="hljs">## </code></pre>
@@ -516,7 +515,7 @@ norm.dat &lt;- log2(norm.dat+<span class="hljs-number">1</span>)
 norm.dat &lt;- Matrix(norm.dat, sparse = <span class="hljs-literal">TRUE</span>)</code></pre>
 </div>
 <div id="cluster" class="section level2">
-<h2>Cluster single-cell data at a fine scale</h2>
+<h2>Fine-scale clustering of single-cell data</h2>
 <p>The parameters of de_param() function ban be seen from scrattch.hicat package(<a href="https://github.com/AllenInstitute/scrattch.hicat/tree/master" class="uri">https://github.com/AllenInstitute/scrattch.hicat/tree/master</a>).</p>
 <p><strong>padj.th</strong>: P-value after fdr adjustment .<br>
 <strong>q1.th</strong>: Proportion threshold of cells in current cell type.<br>
@@ -556,8 +555,8 @@ colnames(group_meta) = c(<span class="hljs-string">"cell"</span>,<span class="hl
 <pre><code class="hljs">## [1] 1000    2</code></pre>
 </div>
 <div id="class" class="section level2">
-<h2>Supply the clusters to a supervised cell type classifier which can output cell major classes and subclasses</h2>
-<p>There should be a reference data for classification which contains gene expression matrix and metadata for cell type major class and subclass information.</p>
+<h2>Provision of clusters to a supervised cell type classifier capable of outputting major cell classes and subclasses</h2>
+<p>There should be reference data available for classification, which includes a gene expression matrix and metadata containing information on the major classes and subclasses of cell types.</p>
 <p><strong>method</strong>: Method to run classification, can be chosen from Seurat or SingleR.</p>
 <pre class="r"><code class="hljs">ref_data = read.csv(<span class="hljs-string">"G:/PFC/package_example/data.csv"</span>,row.names=<span class="hljs-number">1</span>)
 ref_meta = read.csv(<span class="hljs-string">"G:/PFC/package_example/mouse_meta.csv"</span>,row.names=<span class="hljs-number">1</span>)
@@ -588,8 +587,8 @@ anno_meta = RunSubclassClassify(new_data, group_meta, ref_data, ref_meta, method
 ## mouse_pBICCNsMMrMOpRPiM008d190320_CATTCTAAGCTGACAG            10</code></pre>
 </div>
 <div id="DE" class="section level2">
-<h2>Find differentially expressed genes and select marker genes from the identified differentially expressed genes</h2>
-<p>Data will be processed to pseudo cells and run ROC methods to find DE genes. The DE genes are calcuated between clusters which come from same subclass.</p>
+<h2>Identification of differentially expressed genes and select marker genes from the identified differentially expressed genes</h2>
+<p>The data will be processed into pseudo cells and the ROC method will be run to find differentially expressed (DE) genes. These DE genes are calculated between clusters that originate from the same subclass.</p>
 <p><strong>cell_number</strong>: Number of cells to be intergated within pseudo cells.</p>
 <pre class="r"><code class="hljs">new_data = new_data[,rownames(anno_meta)]
 result = RunFindDEGene(new_data, anno_meta,cell_number=<span class="hljs-number">10</span>)
@@ -607,8 +606,8 @@ pse_data = result[[<span class="hljs-number">3</span>]]</code></pre>
 ## 6    6             1      Sst Chodl GABAergic</code></pre>
 </div>
 <div id="anno" class="section level2">
-<h2>Get the final cell type annotation</h2>
-<p>Select top 3 marker genes ranking by binary score. <br> The annotation table contains 7 columns which contains class, subclass and cluster information from previous steps, and then select top 3 marker for this cluster, the cluster_new column is the name gotten from our package.</p>
+<h2>Acquisition of the final cell type annotation</h2>
+<p>Select the top three marker genes ranked by specific score. <br> The annotation table contains seven columns, which include class, subclass, and cluster information from previous steps. From this, select the top three markers for this cluster. The ‘cluster_new’ column contains the name obtained from our package.</p>
 <pre class="r"><code class="hljs">cell_type_anno &lt;- GetCellTypeName(pse_data, pse_meta, all_marker_list)</code></pre>
 <pre><code class="hljs">## [1] 8
 ## [1] 1
@@ -637,8 +636,8 @@ pse_data = result[[<span class="hljs-number">3</span>]]</code></pre>
 ## 10        GABAergic_Pvalb_NA</code></pre>
 </div>
 <div id="extra" class="section level2">
-<h2>Find markers that can not be identified by ROC method</h2>
-<p>We can find that two clusters can not be annotated by our pipeline. One is cluster 11 belongs to Pvalb subclass, it only contains one cluster in Pvalb subclass, so it can not be calculated by our pipeline as our pipeline calculate DE genes between clusters that belongs to same subclass. The other cluster 17 can not find markers using ROC methods, so we use other DE gene detection methods to find markers and we will annotate the method used to find markers.</p>
+<h2>Identification of markers that cannot be detected using the ROC method</h2>
+<p>We found that two clusters could not be annotated by our pipeline. One is Cluster 11, which belongs to the Pvalb subclass. Since it only contains one cluster in the Pvalb subclass, it cannot be calculated by our pipeline, as our pipeline calculates differentially expressed (DE) genes between clusters that belong to the same subclass. The other, Cluster 17, could not find markers using ROC methods. Therefore, we used other DE gene detection methods to find markers, and we will annotate the method used to find these markers.</p>
 <pre class="r"><code class="hljs">anno_new &lt;- GetCellTYpeNameExtend(cell_type_anno, pse_data, pse_meta)</code></pre>
 <pre><code class="hljs">## Calculating cluster 13</code></pre>
 <pre><code class="hljs">## Calculating cluster 15</code></pre>
